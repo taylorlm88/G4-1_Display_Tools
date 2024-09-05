@@ -23,6 +23,7 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
         menu_open
         inscreen_plot
         preview_on_arena
+        system
 
         
     end
@@ -33,6 +34,17 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
 %% CONSTRUCTOR-------------------------------------------------------------
 
         function self = G4_designer_controller()
+
+            %% First thing it needs to do is produce a pop up window asking user which system
+            % they're using. 
+            answer = questdlg('Which system are you using?', 'System Version', 'G4', 'G4-1', 'G4');
+            switch answer
+                case 'G4'
+                    self.set_system(0);
+                case 'G4-1'
+                    self.set_system(1);
+            end
+
             self.set_model(G4_designer_model());
             self.set_doc(G4_document());
             self.set_settings_con(G4_settings_controller());
@@ -2370,6 +2382,18 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
             self.preview_on_arena = value;
         end
 
+        function set_system(self, value)
+            % 0 = G4
+            % 1 = G4.1
+            if value == 0 || value == 1
+                self.system = value;
+            else
+                warning("Unrecognized system, please select G4 or G4.1");
+            end
+        end
+
+
+
 %% GETTERS
 
         %Getting stuff from the document object
@@ -2632,6 +2656,10 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
 
         function output = get_preview_on_arena(self)
             output = self.preview_on_arena;
+        end
+
+        function output = get_system(self)
+            output = self.system;
         end
 
         

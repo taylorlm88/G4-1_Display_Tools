@@ -38,7 +38,41 @@ classdef G4_designer_view < handle
 
     methods
         function self = G4_designer_view(con)
+
+            %% G4 system
+            % 13 column tables
+            % column_names = {'Mode', 'Pattern Name' 'Position Function', ...
+            %     'AO 2', 'AO 3', 'AO 4', 'AO 5', ...
+            %     'Frame Index', 'Frame Rate', 'Gain', 'Offset', 'Duration' ...
+            %     'Select'};
+            % column_format = {'numeric', 'char', 'char', 'char', 'char','char', ...
+            %     'char', 'char', 'numeric', 'numeric', 'numeric', 'numeric', 'logical'};
+            % column_widths = {'auto', 'auto', 'auto', 'auto', 'auto', 'auto', ...
+            %     'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto',};
+            % 
+            % self.num_rows_buttonGrp = uibuttongroup(self.f, 'units', 'normalized', ...
+            %     'Position', [left_margin, chan_pan.Position(2) - .05, chan_pan.Position(3), .04], 'SelectionChangedFcn', @self.update_rowNum);
+            % rowGrpSize = [self.num_rows_buttonGrp.Position(3), self.num_rows_buttonGrp.Position(4)];
+            % rowGrpSize_pix = rowGrpSize .* self.f.Position(3:4);
+            % 
+            % self.num_rows_3 = uiradiobutton(self.num_rows_buttonGrp, 'Text', '3 Row Screen', ...
+            %     'FontSize', font_size, 'Position', [.05, .05, .45, .9].*[rowGrpSize_pix, rowGrpSize_pix]);
+            % 
+            % self.num_rows_4 = uiradiobutton(self.num_rows_buttonGrp, 'Text', '4 Row Screen', ...
+            %     'FontSize', font_size, 'Position', [.5, .05, .45, .9].*[rowGrpSize_pix, rowGrpSize_pix]);
+
+
+            %% G4.1 System
+            % 7 column tables
+             % column_names = {'Mode', 'Pattern Name', 'Frame Rate', 
+            %     'Frame Index',  'Gain', 'Duration' ...
+            %     'Select'};
+            % column_format = {'numeric', 'char', 'numeric', 'numeric', 'numeric', 'numeric', 'logical'};
+            % column_widths = {'auto', 'auto', 'auto', 'auto', 'auto', 'auto', ...
+            %     'auto'};
+
             self.con = con;
+            system = self.con.get_system();
              %get screensize to calculate gui dimensions
             screensize = get(0, 'screensize');
 
@@ -318,7 +352,7 @@ classdef G4_designer_view < handle
             %chan4_rate_label
             uilabel(chan_pan, 'Text', 'Channel 4 Sample Rate', 'FontSize', font_size, ...
                 'Position', [.05, .1, .5, .17].*[chan_pan_size_pix, chan_pan_size_pix]);
-
+%% ----------- System G4 only -----------------
             self.num_rows_buttonGrp = uibuttongroup(self.f, 'units', 'normalized', ...
                 'Position', [left_margin, chan_pan.Position(2) - .05, chan_pan.Position(3), .04], 'SelectionChangedFcn', @self.update_rowNum);
             rowGrpSize = [self.num_rows_buttonGrp.Position(3), self.num_rows_buttonGrp.Position(4)];
@@ -379,7 +413,7 @@ classdef G4_designer_view < handle
             mode_7_label = uilabel(key_pan, 'Text', 'Mode 7: Closed-loop sets frame index', 'BackgroundColor', [.75,.75,.75], ...
                 'HorizontalAlignment', 'left','FontSize', 11, 'Position', [chan_label_margin*key_pan_size_pix(1), ...
                 mode_6_label_cont.Position(2) - chan_label_height*key_pan_size_pix(2), chan_label_width*key_pan_size_pix(1), chan_label_height*key_pan_size_pix(2)]);
-
+% ----------------------------
             self.uneditableStyle = uistyle;
             self.editableStyle = uistyle;
             self.update_uneditable_style();
