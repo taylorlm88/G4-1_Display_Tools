@@ -10,7 +10,7 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
         run_con %controller for the run window - can be opened independently
         doc %contains all data that is stored in the saved file
         settings_con %controller (containing the view and model) for the settings panel
-
+        system %object with information about the specific arena system being used (G4, G4-1, etc)
 
         %structs in which to load files as they are entered
         pre_files
@@ -33,6 +33,8 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
 %% CONSTRUCTOR-------------------------------------------------------------
 
         function self = G4_designer_controller()
+
+            self.set_system(experiment_system());
             self.set_model(G4_designer_model());
             self.set_doc(G4_document());
             self.set_settings_con(G4_settings_controller());
@@ -2374,6 +2376,10 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
             self.preview_on_arena = value;
         end
 
+        function set_system(self, value)
+            self.system = value;
+        end
+
 %% GETTERS
 
         %Getting stuff from the document object
@@ -2636,6 +2642,10 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
 
         function output = get_preview_on_arena(self)
             output = self.preview_on_arena;
+        end
+
+        function output = get_system(self)
+            output = self.system;
         end
 
         
