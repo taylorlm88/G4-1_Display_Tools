@@ -27,9 +27,9 @@ classdef G4_trial_model
 
     methods
         
-        function self = G4_trial_model()
+        function self = G4_trial_model(system)
         
-            self.trial_mode = 1 ;
+            self.trial_mode = system.default_trial_mode;
             self.pattern_name= '' ;
             self.position_func = '' ;
             self.ao1 = '' ;

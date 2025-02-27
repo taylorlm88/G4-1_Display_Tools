@@ -391,6 +391,7 @@ classdef G4_designer_view < handle
             self.uneditableStyle = uistyle;
             self.editableStyle = uistyle;
             self.update_uneditable_style();
+            self.system_based_updates();
             
 
         end
@@ -417,6 +418,22 @@ classdef G4_designer_view < handle
             self.update_uneditable_style();
 
         end
+
+        function system_based_updates(self)
+            % Make any changes to the GUI necessary based on the system
+            % selected, like number of rows the screen allows, size of the
+            % preview window, etc.
+
+            sys = self.con.get_system();
+
+            if length(self.num_rows_buttonGrp.Buttons) > sys.num_screen_rows
+                for row = sys.num_screen_rows+1:length(self.num_rows_buttonGrp.Buttons)
+                    set(self.num_rows_buttonGrp.Buttons(row),'enable','off');
+                end
+            end
+
+        end
+
 
 
         function close_application(self, src, event)
