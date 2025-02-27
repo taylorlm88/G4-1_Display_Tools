@@ -4,7 +4,9 @@ classdef experiment_system < handle
 
         possible_trial_parameters
         num_screen_rows %Potential number of screen rows for this system, not the actual number on the screen you are using.
-        run_protocols 
+        run_protocols % This is the list of file names that are allowed to act as run protocol
+        run_protocol_names % This is list should be the same length as the run protocols. 
+                            % It provides easy to understand strings to make up the run protocol drop down list in the conductor.
         default_trial_mode % What mode should trials default to in this system?
         prohibited_modes
         screen_dimensions
@@ -26,14 +28,24 @@ classdef experiment_system < handle
                     %that parameter is used in this system, 1 if not. 
                     
                     self.set_num_screen_rows(4);
-                    self.set_run_protocols({});
+                    self.set_run_protocols({'G4_default_run_protocol', ...
+                        'G4_default_run_protocol_streaming', ...
+                        'G4_run_protocol_blockLogging', ...
+                        'G4_run_protocol_streaming_blockLogging'});
+                    self.set_run_protocol_names({'Simple', ...
+                        'Streaming', ...
+                        'Log Reps Separately', ...
+                        'Streaming + Log Reps'});
                     self.default_trial_mode = 1;
                     self.prohibited_modes = [];
-                    self.screen_dimensions
+
                 case 'G4-1'
                     
                     self.set_num_screen_rows(2);
-                    self.set_run_protocols({});
+                    self.set_run_protocols({'G4_default_run_protocol', ...
+                        'G4_run_protocol_blockLogging'});
+                    self.set_run_protocol_names({'Simple', ...
+                        'Log Reps Separately'});
                     self.default_trial_mode = 2;
                     self.prohibited_modes = [1,5];
                     
@@ -80,6 +92,10 @@ classdef experiment_system < handle
         function value = get_default_mode(self)
             value = self.default_trial_mode;
         end
+        
+        function value = get_run_protocol_names(self)
+            value = self.run_protocol_names;
+        end
 
 
         %% Setters
@@ -96,6 +112,10 @@ classdef experiment_system < handle
 
         function set_default_mode(self, new_val)
             self.default_trial_mode = new_val;
+        end
+
+        function set_run_protocol_names(self, new_val)
+            self.run_protocol_names = new_val;
         end
 
 
