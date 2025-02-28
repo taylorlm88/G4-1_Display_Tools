@@ -542,18 +542,25 @@ classdef G4_designer_view < handle
             y = event.Indices(2);
             trialtype = src.Tag;
             self.con.set_current_selected_cell(trialtype, event.Indices);
+            sys = self.con.get_system();
             if y == 1
-                allow = 1;                
+                if isempty(find(new==sys.prohibited_modes,1))
+                    allow = 1;                
+                else
+                    allow = 2;
+                    self.con.create_error_box("This system does not currently support that mode.");
+                    
+                end
             else
                 mode = self.con.get_trial_component(trialtype, x, 1);
                 allow = self.con.check_editable(mode, y);              
             end
             if allow == 1
                 self.con.update_trial_doc(new, x, y, trialtype);
-            else
+            elseif allow == 0
                 self.con.create_error_box("You cannot edit that field in this mode.");
             end
-            if y == 1
+            if y == 1 && allow == 1
                 self.con.clear_fields(new);
             end
             self.con.insert_greyed_cells();
