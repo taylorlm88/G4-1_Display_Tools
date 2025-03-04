@@ -1170,7 +1170,7 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                 if index_of_pat > length(pos_fields)
                     index_of_pat = rem(length(pos_fields), index_of_pat);
                 end
-                if ~isempty(index_of_pat)
+                if ~isempty(index_of_pat) && index_of_pat ~= 0
                     pos_field = pos_fields{index_of_pat};
                     pos = self.doc.Pos_funcs.(pos_field).filename;
                 else

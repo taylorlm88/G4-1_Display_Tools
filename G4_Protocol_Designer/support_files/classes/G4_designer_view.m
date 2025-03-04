@@ -544,6 +544,9 @@ classdef G4_designer_view < handle
             self.con.set_current_selected_cell(trialtype, event.Indices);
             sys = self.con.get_system();
             if y == 1
+                if ~isnumeric(new)
+                    new = str2num(new);
+                end
                 if isempty(find(new==sys.prohibited_modes,1))
                     allow = 1;                
                 else

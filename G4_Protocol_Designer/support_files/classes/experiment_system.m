@@ -22,6 +22,7 @@ classdef experiment_system < handle
                 'ao2','ao3','ao4','frame_ind','frame_rate','gain','offset','duration'});
             answer = questdlg('Which system are you using?', 'System Version', 'G4', 'G4-1', 'G4');
             switch answer
+                
                 case 'G4'
                     %for each case provide a list of 0's and 1's that
                     %correspond to the list of possible parameters - 0 if
@@ -49,12 +50,10 @@ classdef experiment_system < handle
                     self.set_run_protocol_names({'Simple', ...
                         'Log Reps Separately'});
                     self.default_trial_mode = 2;
-                    self.prohibited_modes = [1,5];
+                    self.prohibited_modes = [1, 5];
                     
                     % To add a new system, add additional cases
             end
-
-
         end
         % 
         % function inds = get_required_params(self)

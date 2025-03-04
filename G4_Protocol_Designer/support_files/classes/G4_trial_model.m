@@ -37,7 +37,12 @@ classdef G4_trial_model
             self.ao3 = '' ;
             self.ao4 = '' ;
             self.frame_index = [] ;
-            self.frame_rate = [] ;
+            if self.trial_mode ==2
+                self.frame_rate = 60;
+            else
+
+                self.frame_rate = [] ;
+            end
             self.gain = [] ;
             self.offset = [] ;
             self.duration = 5 ;
