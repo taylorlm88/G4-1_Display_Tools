@@ -302,7 +302,7 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
             pat_indices = []; %A record of all pattern indices that match the screen size.
 
             d = self.doc;
-            default_mode = 1;
+            default_mode = self.system.get_default_mode();
             pat_fields = fieldnames(d.Patterns);
             %Create an array of ID values from each pattern field
             for i = 1:length(pat_fields)
@@ -479,6 +479,7 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                         end
                     else
                         pos = '';
+                        dur = 5;
                     end
 
                     if num_ao ~= 0
@@ -521,7 +522,7 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
 
                 end
             end
-            
+            self.insert_greyed_cells();            
         end
 
         %Replace the currently selected cell in the tables with the
