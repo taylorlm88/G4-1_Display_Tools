@@ -3,11 +3,11 @@ classdef experiment_system < handle
     properties
 
         possible_trial_parameters
+        default_param_values % Default values for all parameters, whether or not they're used in the system
         num_screen_rows %Potential number of screen rows for this system, not the actual number on the screen you are using.
         run_protocols % This is the list of file names that are allowed to act as run protocol
         run_protocol_names % This is list should be the same length as the run protocols. 
                             % It provides easy to understand strings to make up the run protocol drop down list in the conductor.
-        default_trial_mode % What mode should trials default to in this system?
         prohibited_modes
         screen_dimensions
 
@@ -39,7 +39,7 @@ classdef experiment_system < handle
                         'Streaming', ...
                         'Log Reps Separately', ...
                         'Streaming + Log Reps'});
-                    self.default_trial_mode = 1;
+                    self.default_param_values = {1, '', '', '', '', '', '', 1, 60, 1, 0, 5};
                     self.prohibited_modes = [];
 
                 case 'G4-1'
@@ -49,7 +49,7 @@ classdef experiment_system < handle
                         'G4_run_protocol_blockLogging'});
                     self.set_run_protocol_names({'Simple', ...
                         'Log Reps Separately'});
-                    self.default_trial_mode = 2;
+                    self.default_param_values = {2, '', '', '', '', '', '', 1, 60, 1, 0, 5};
                     self.prohibited_modes = [1, 5];
                     
                     % To add a new system, add additional cases
@@ -90,8 +90,8 @@ classdef experiment_system < handle
             value = self.run_protocols;
         end
         
-        function value = get_default_mode(self)
-            value = self.default_trial_mode;
+        function value = get_default_param_values(self)
+            value = self.default_param_values;
         end
         
         function value = get_run_protocol_names(self)
@@ -111,8 +111,8 @@ classdef experiment_system < handle
             self.run_protocols = new_val;
         end
 
-        function set_default_mode(self, new_val)
-            self.default_trial_mode = new_val;
+        function set_default_param_values(self, new_val)
+            self.default_param_values = new_val;
         end
 
         function set_run_protocol_names(self, new_val)

@@ -302,7 +302,14 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
             pat_indices = []; %A record of all pattern indices that match the screen size.
 
             d = self.doc;
-            default_mode = self.system.get_default_mode();
+            default_params = self.system.get_default_param_values();
+            default_mode = default_params{1};
+            uneditable_indices = self.get_uneditable_indices(default_mode);
+            editable_indices = self.get_editable_indices(uneditable_indices);
+            for i = uneditable_indices
+                default_params{i} = self.get_uneditable_text();
+            end
+           
             pat_fields = fieldnames(d.Patterns);
             %Create an array of ID values from each pattern field
             for i = 1:length(pat_fields)
@@ -319,22 +326,26 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                 pattern_ids{idx} = 100000;
 
             end
-
-            if ~isempty(fieldnames(d.Pos_funcs))
-
-                pos_fields = fieldnames(d.Pos_funcs);
-                pos_names = cell(length(pos_fields),1);
-                for i = 1:length(pos_fields)
-                    pos_ids{i} = d.Pos_funcs.(pos_fields{i}).pfnparam.ID;
-                end
-                for j = 1:length(pos_fields)
-                    [val, idx] = min(cell2mat(pos_ids));
-                    pos_names{j} = d.Pos_funcs.(pos_fields{idx}).filename;
-                    pos_ids{idx} = 100000;
-                end
-
-            else
+            if ~isempty(find(uneditable_indices==3,1))
                 pos_names = [];
+            else
+
+                if ~isempty(fieldnames(d.Pos_funcs))
+    
+                    pos_fields = fieldnames(d.Pos_funcs);
+                    pos_names = cell(length(pos_fields),1);
+                    for i = 1:length(pos_fields)
+                        pos_ids{i} = d.Pos_funcs.(pos_fields{i}).pfnparam.ID;
+                    end
+                    for j = 1:length(pos_fields)
+                        [val, idx] = min(cell2mat(pos_ids));
+                        pos_names{j} = d.Pos_funcs.(pos_fields{idx}).filename;
+                        pos_ids{idx} = 100000;
+                    end
+    
+                else
+                    pos_names = [];
+                end
             end
             if ~isempty(fieldnames(d.Ao_funcs))
 
@@ -392,50 +403,42 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                 pos1_field = d.get_posfunc_field_name(pos1);
                 if num_pats ~=0 && length(d.Patterns.(pat1_field).pattern.Pats(1,1,:)) < ...
                     max(d.Pos_funcs.(pos1_field).pfnparam.func)
-                pos1 = '';
+                    pos1 = '';
                 end
             else
-                pos1 = '';
+                pos1 = default_params{3};
             end
             if num_ao ~= 0
                 ao1 = ao_names{ao_index};
                 ao1_field = d.get_aofunc_field_name(ao1);
             else
-                ao1 = '';
+                ao1 = default_params{4};
+            end
+            
+            default_params{2} = pat1;
+            default_params{3} = pos1;
+            default_params{4} = ao1;
+            self.update_trial_doc(default_params{1},1,1,'pre');
+            self.update_trial_doc(default_params{1},1,1,'inter');
+            self.update_trial_doc(default_params{1},1,1,'post');
+            for ind = editable_indices
+                self.update_trial_doc(default_params{ind},1,ind,'pre');
+                self.update_trial_doc(default_params{ind},1,ind,'inter');
+                self.update_trial_doc(default_params{ind},1,ind,'post');
             end
 
-            self.update_trial_doc(default_mode, 1, 1, 'pre');
-            self.update_trial_doc(pat1, 1, 2, 'pre');
-            self.update_trial_doc(pos1, 1, 3, 'pre');
-            self.update_trial_doc(ao1, 1, 4, 'pre');
+            for ind = uneditable_indices
+                self.update_trial_doc(self.doc.get_uneditable_text(),1,ind,'pre');
+                self.update_trial_doc(self.doc.get_uneditable_text(),1,ind,'inter');
+                self.update_trial_doc(self.doc.get_uneditable_text(),1,ind,'post');
+            end
+            self.set_cell_style(1,editable_indices, 'pre', 1);
+            self.set_cell_style(1,editable_indices, 'inter', 1);
+            self.set_cell_style(1,editable_indices, 'post', 1);
 
-            %disable appropriate cells for mode 1
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1,9, 'pre');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 10, 'pre');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 11, 'pre');
-            self.set_cell_style(1, [9, 10, 11], 'pre', 0);
-
-            self.update_trial_doc(default_mode, 1, 1, 'inter');
-            self.update_trial_doc(pat1, 1, 2, 'inter');
-            self.update_trial_doc(pos1, 1, 3, 'inter');
-            self.update_trial_doc(ao1, 1, 4, 'inter');
-
-            %disable appropriate cells for mode 1
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 9, 'inter');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 10, 'inter');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 11, 'inter');
-            self.set_cell_style(1, [9, 10, 11], 'inter', 0);
-
-            self.update_trial_doc(default_mode, 1, 1, 'post');
-            self.update_trial_doc(pat1, 1, 2, 'post');
-            self.update_trial_doc(pos1, 1, 3, 'post');
-            self.update_trial_doc(ao1, 1, 4, 'post');
-
-            %disable appropriate cells for mode 1
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 9, 'post');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 10, 'post');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 11, 'post');
-            self.set_cell_style(1, [9, 10, 11], 'post', 0);
+            self.set_cell_style(1, uneditable_indices, 'pre', 0);
+            self.set_cell_style(1, uneditable_indices, 'inter', 0);
+            self.set_cell_style(1, uneditable_indices, 'post', 0);
 
             if num_pos ~= 0
                 if d.Pos_funcs.(pos1_field).pfnparam.gs_val == 1
@@ -444,18 +447,16 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                 else
                     block_dur = round(d.Pos_funcs.(pos1_field).pfnparam.size/1000,1);
                 end
-                self.update_trial_doc(block_dur, 1, 12, 'block');
-            end
-            self.update_trial_doc(default_mode, 1, 1, 'block');
-            self.update_trial_doc(pat1, 1, 2, 'block');
-            self.update_trial_doc(pos1, 1, 3, 'block');
-            self.update_trial_doc(ao1, 1, 4, 'block');
+                default_params{12} = block_dur;
 
-            %disable appropriate cells for mode 1
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 9, 'block');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 10, 'block');
-            self.update_trial_doc(self.doc.get_uneditable_text(), 1, 11, 'block');
-            self.set_cell_style(1, [9, 10, 11], 'block', 0);
+            end
+            for p = 1:length(default_params)
+                self.update_trial_doc(default_params{p},1,p,'block')
+            end
+            self.set_cell_style(1, uneditable_indices, 'block', 0);
+            self.set_cell_style(1, editable_indices, 'block', 1);
+
+            
 
             j = 1; %will end up as the count of how many patterns are used. Acts as the indices to "pat_indices"
             pat_index = pat_index + 1;
@@ -478,8 +479,8 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                             dur = round(d.Pos_funcs.(pos_field).pfnparam.size/1000,1);
                         end
                     else
-                        pos = '';
-                        dur = 5;
+                        pos = default_params{3};
+                        dur = default_params{12};
                     end
 
                     if num_ao ~= 0
@@ -489,7 +490,7 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                         ao = ao_names{ao_index};
                         ao_field = d.get_aofunc_field_name(ao);
                     else
-                        ao = '';
+                        ao = default_params{4};
                     end
 
                     if length(d.Patterns.(pat_field).pattern.Pats(:,1,1))/16 ~= d.num_rows
@@ -499,12 +500,12 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                         continue;
                     end
                     %Only executes if previous if statement did not. Sets new row's pattern
-                    newrow = self.doc.block_trials(end, 1:end);
 
-                    newrow{2} = pat;
-                    newrow{3} = pos;
-                    newrow{4} = ao;
-                    newrow{12} = dur;
+                    default_params{2} = pat;
+                    default_params{3} = pos;
+                    default_params{4} = ao;
+                    default_params{12} = dur;
+                    default_params{13} = 0;
 
                     pat_indices(j) = pat_index;
                     j = j + 1;
@@ -512,13 +513,13 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                     pos_index = pos_index + 1;
                     ao_index = ao_index + 1;
 
-                    if ~strcmp(newrow{3},'')
+                    if ~strcmp(default_params{3},'') && ~strcmp(default_params{3},self.get_uneditable_text())
                         if length(d.Patterns.(pat_field).pattern.Pats(1,1,:)) < ...
                                max(d.Pos_funcs.(pos_field).pfnparam.func)
-                            newrow{3} = '';
+                            default_params{3} = '';
                         end
                     end
-                    self.update_trial_doc(newrow, j, 1, 'block')
+                    self.update_trial_doc(default_params, j, 1, 'block')
 
                 end
             end
