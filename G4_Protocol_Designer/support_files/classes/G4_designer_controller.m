@@ -897,10 +897,12 @@ classdef G4_designer_controller < handle %Made this handle class because was hav
                 %keep instances of each class but clear all data
                 clear self.model;
                 delete(self.doc);
-                self.doc = G4_document();
-                self.settings_con = G4_settings_controller();
-                self.preview_con = G4_preview_controller(self.doc);
+                self.doc = G4_document(self.system);
+                self.set_settings_con(G4_settings_controller());
+                self.set_preview_con(G4_preview_controller(self.doc));
                 self.reset_defaults();
+                self.insert_greyed_cells();
+                self.update_gui() ;
                 
             end
         end
