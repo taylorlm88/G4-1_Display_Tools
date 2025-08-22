@@ -87,7 +87,6 @@ classdef G4_conductor_model < handle
             self.set_rearing_protocol(self.metadata_options.rearing{1});
             self.set_light_cycle(self.metadata_options.light_cycle{1});
             self.set_experiment_type('Flight');
-            %self.experiment_types = {'Flight','Camera walk', 'Chip walk'};
             self.set_do_plotting(1);
             self.set_do_processing(1);
             self.set_num_tests_conducted(0);
@@ -246,7 +245,11 @@ classdef G4_conductor_model < handle
         end
 
         function set_experiment_type(self, new_val)
-            self.experiment_type = new_val;
+            if sum(strcmp(new_val, self.settings.Experiment_Types))>0
+                self.experiment_type = new_val;
+            else
+                warning("This experiment type is not listed in settings file.");e
+            end
         end
 
         function set_fly_age(self, new_val)

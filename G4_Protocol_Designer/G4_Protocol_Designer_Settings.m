@@ -4,7 +4,8 @@
 function settings = G4_Protocol_Designer_Settings()
 
 %% config file
-settings.Configuration_Filepath = "C:\Program Files (x86)\HHMI G4\Support Files\HHMI Panels Configuration.ini";
+settings.Configuration_Filepath = "/Users/lisaferguson/Documents/PC/Programming/Reiser/HHMI Panels Configuration.ini";
+settings.Experiment_Types = {'Flight','Camera walk', 'Chip walk'};
 
 %% Google sheet settings
 settings.Google_Sheet_Key = "1g4IYtTNq-QAaGgPDIut5P_5y6CNWU0azGazq4zguqw8";
@@ -17,15 +18,15 @@ settings.Rearing_Protocol_Sheet_GID = "2007977020";
 settings.Light_Cycle_Sheet_GID = "1154672887";
 
 %% Default Files
-settings.run_protocol_file = "C:\matlabroot\G4_Display_Tools\G4_Protocol_Designer\run_protocols\G4_default_run_protocol.m";
+settings.run_protocol_file = "";
 settings.processing_file = "";
 settings.plotting_file = "";
 
-settings.test_run_protocol_file = "C:\matlabroot\G4_Display_Tools\G4_Protocol_Designer\run_protocols\G4_default_run_protocol.m";
+settings.test_run_protocol_file = "";
 settings.test_processing_file = "";
 settings.test_plotting_file = "";
 
-settings.test_protocol_file_flight = "C:\matlabroot\G4_Display_Tools\G4_Protocol_Designer\test_protocols\test_protocol_4Rows\test_protocol_4Rows.g4p";
+settings.test_protocol_file_flight = "";
 settings.test_protocol_file_camWalk = "";
 settings.test_protocol_file_chipWalk = "";
 
@@ -35,6 +36,7 @@ settings.Uneditable_Cell_Color = "#bdbdbd";
 settings.Uneditable_Cell_Text = "---------";
 
 end
+
 
 
 
